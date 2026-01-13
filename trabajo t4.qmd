@@ -1,0 +1,268 @@
+---
+title: "Trabajo Regresión funciones núcleo"
+author: "alguien <br/> alguine 2 <br/> Lola Velasco Ballesta"
+date: today
+lang: es
+
+format:
+  html:
+    toc: true
+  typst: 
+    toc: true
+    papersize: a4
+    output-file: "blabla.pdf"
+editor: source
+---
+
+
+# Variables
+
+```{r}
+data <- read.table("auto-mpg.data")
+colnames(data) <- c("mpg","cylinders","displacement","horsepower",
+                     "weight","acceleration","model year",
+                     "origin","car name")
+```
+
+
+```{r}
+y <- data$mpg
+x1 <- as.numeric(data$horsepower)
+x1<- x1[!is.na(x1)]                 
+x2 <- data$weight
+```
+
+
+```{r}
+
+```
+
+
+# Tarea 1
+::: callout-note
+## Ejercicio 1
+Determina el parámetro ventana para la estimación de la función de densidad de y, utilizando núcleo gaussiano, con los métodos: validación cruzada y plug-in.
+:::
+
+```{r}
+hvc=bw.ucv(y) #  Validación cruzada
+hvc
+hpi=bw.SJ(y)  #  Plug-in
+hpi
+```
+
+
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 2
+Representa los estimadores núcleo asociados en un mismo gráfico. Comenta brevemente el resultado.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 3
+Repite los dos apartados anteriores para x1 y x2.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+# Tarea 2
+::: callout-note
+## Ejercicio 4
+Estima la función de densidad conjunta de (y, x1) utilizando un estimador núcleo, con núcleo gaussiano y ventana calculada con método plug-in. Escribe la matriz de ventadas y representa el estimador obtenido.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 5
+Da una estimación de la función de densidad conjunta en (y, x1) = (20, 150).
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 6
+Repite los dos apartados anteriores para (y, x2) y (y, x2) = (25, 3000). 
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+# Tarea 3
+
+::: callout-note
+## Ejercicio 7
+Estima la curva de regresión de y sobre x1 utilizando un estimador local lineal (p = 1), con núcleo gaussiano, y ventana calculada con los métodos: validación cruzada y plug-in.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 8
+Calcula la línea de regresión y escribe su expresión.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 9
+Representa los tres estimadores en un mismo gráfico. Comenta brevemente el resultado.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 10
+Estima la curva de regresión en x1 = 110 con los tres estimadores.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+::: callout-note
+## Ejercicio 11
+Repite los cuatro apartados anteriores para y sobre x2 y x2 = 3000.
+:::
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
