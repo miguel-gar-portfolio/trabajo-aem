@@ -24,12 +24,18 @@ colnames(data) <- c("mpg","cylinders","displacement","horsepower",
                      "origin","car name")
 ```
 
+```{r}
+
+```
+
 
 ```{r}
 y <- data$mpg
 x1 <- as.numeric(data$horsepower)
-x1<- x1[!is.na(x1)]                 
+masc=is.na(x1)
+x1<- x1[!is.na(x1)]         
 x2 <- data$weight
+y_masc = y[!masc]
 ```
 
 
@@ -43,7 +49,7 @@ x2 <- data$weight
 ## Ejercicio 1
 Determina el parámetro ventana para la estimación de la función de densidad de y, utilizando núcleo gaussiano, con los métodos: validación cruzada y plug-in.
 :::
-
+Por defecto se usa el núcleo de gaussiano, por lo tanto  las ventanas son las siguientes. 
 ```{r}
 hvc=bw.ucv(y) #  Validación cruzada
 hvc
@@ -63,7 +69,13 @@ Representa los estimadores núcleo asociados en un mismo gráfico. Comenta breve
 :::
 
 ```{r}
+d1=density(y, bw = hvc) # Validación cruzada
+d2=density(y, bw = hpi) # Plug-in
 
+hist(y,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='') 
+lines(d1, col='red', lwd= 2 )
+lines(d2, col = 'blue',lwd= 2)
+legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
 ```{r}
@@ -80,19 +92,41 @@ Repite los dos apartados anteriores para x1 y x2.
 :::
 
 ```{r}
+hvc=bw.ucv(x1) #  Validación cruzada
+hvc
+hpi=bw.SJ(x1)  #  Plug-in
+hpi
 
+hvc=bw.ucv(x2) #  Validación cruzada
+hvc
+hpi=bw.SJ(x2)  #  Plug-in
+hpi
 ```
 
 ```{r}
+d1=density(x1, bw = hvc) # Validación cruzada
+d2=density(x1, bw = hpi) # Plug-in
 
+hist(x1,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='') 
+lines(d1, col='red', lwd= 2 )
+lines(d2, col = 'blue',lwd= 2)
+legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
 ```{r}
+d1=density(x2, bw = hvc) # Validación cruzada
+d2=density(x2, bw = hpi) # Plug-in
 
+hist(x2,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='', ylim=c(0,0.0008)) 
+lines(d1, col='red', lwd= 2 )
+lines(d2, col = 'blue',lwd= 2)
+legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
 ```{r}
-
+length(x1)
+length(y_masc)
+matrix(y_masc,x1)
 ```
 
 # Tarea 2
@@ -100,13 +134,31 @@ Repite los dos apartados anteriores para x1 y x2.
 ## Ejercicio 4
 Estima la función de densidad conjunta de (y, x1) utilizando un estimador núcleo, con núcleo gaussiano y ventana calculada con método plug-in. Escribe la matriz de ventadas y representa el estimador obtenido.
 :::
-
+ks usa el nucleo gaussiano 
 ```{r}
-
+library(ks)
+mat = cbind(y_masc,x1)
+Hp = Hpi(mat)
+print(Hp)
+fhat.pi = kde(mat,H=Hp) # Por defecto el método es plug in
+ 
+plot(fhat.pi) # Representación de los contornos
+plot(y_masc,x1)
 ```
 
 ```{r}
+# Representación en 3D
+ 
+z1 = fhat.pi$eval.points[[1]]
 
+z2 = fhat.pi$eval.points[[2]]
+
+z3 = fhat.pi$estimate
+ 
+persp(z1,z2,z3,col='gold')
+
+persp(z1,z2,z3,col='gold',theta=45,phi=45) # Mismo grafico pero rotado
+ 
 ```
 
 ```{r}
@@ -119,7 +171,7 @@ Da una estimación de la función de densidad conjunta en (y, x1) = (20, 150).
 :::
 
 ```{r}
-
+predict(fhat.pi,x=c(20,150))
 ```
 
 ```{r}
@@ -138,6 +190,34 @@ Da una estimación de la función de densidad conjunta en (y, x1) = (20, 150).
 ## Ejercicio 6
 Repite los dos apartados anteriores para (y, x2) y (y, x2) = (25, 3000). 
 :::
+```{r}
+library(ks)
+mat = cbind(y, x2)
+Hp = Hpi(mat)
+print(Hp)
+fhat.pi = kde(mat,H=Hp) # Por defecto el método es plug in
+ 
+plot(fhat.pi) # Representación de los contornos
+points(y,x2,cex=0.1)
+```
+
+```{r}
+# Representación en 3D
+ 
+z1 = fhat.pi$eval.points[[1]]
+
+z2 = fhat.pi$eval.points[[2]]
+
+z3 = fhat.pi$estimate
+ 
+persp(z1,z2,z3,col='gold')
+
+persp(z1,z2,z3,col='gold',theta=45,phi=45) # Mismo grafico pero rotado
+ 
+```
+```{r}
+predict(fhat.pi,x=c(25,3000))
+```
 
 ```{r}
 
