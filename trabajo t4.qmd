@@ -17,6 +17,7 @@ editor: source
 
 # Variables
 
+Preparamos la tabla cambiándole el nombre a las columnas por comodidad.
 ```{r}
 data <- read.table("auto-mpg.data")
 colnames(data) <- c("mpg","cylinders","displacement","horsepower",
@@ -24,43 +25,32 @@ colnames(data) <- c("mpg","cylinders","displacement","horsepower",
                      "origin","car name")
 ```
 
-```{r}
-
-```
-
+Definimos las variables como nos piden. ¡Ojo!: x1 tiene valores `NA`, se crea una máscara para seleccionar esos valores y posteriormente poder redefinir x1 sin dichos elementos.
 
 ```{r}
 y <- data$mpg
+
 x1 <- as.numeric(data$horsepower)
-masc=is.na(x1)
-x1<- x1[!is.na(x1)]         
+masc=!is.na(x1)
+x1<- x1[masc]  
+
 x2 <- data$weight
-y_masc = y[!masc]
 ```
 
-
-```{r}
-
-```
-
+Una vez preparadas las variables podemos pasar a realizar los ejercicios. 
 
 # Tarea 1
 ::: callout-note
 ## Ejercicio 1
 Determina el parámetro ventana para la estimación de la función de densidad de y, utilizando núcleo gaussiano, con los métodos: validación cruzada y plug-in.
 :::
-Por defecto se usa el núcleo de gaussiano, por lo tanto  las ventanas son las siguientes. 
+
+Para determinar el valor de las ventanas usaremos las funciones siguientes, las cuales usan el núcleo gaussiano por defecto. 
 ```{r}
-hvc=bw.ucv(y) #  Validación cruzada
-hvc
-hpi=bw.SJ(y)  #  Plug-in
-hpi
-```
-
-
-
-```{r}
-
+hvc_y=bw.ucv(y) #  Validación cruzada
+hvc_y
+hpi_y=bw.SJ(y)  #  Plug-in
+hpi_y
 ```
 
 ::: callout-note
@@ -68,22 +58,18 @@ hpi
 Representa los estimadores núcleo asociados en un mismo gráfico. Comenta brevemente el resultado.
 :::
 
+Definimos los distintos estimadores determinando las ventanas que deben ser usadas. 
 ```{r}
-d1=density(y, bw = hvc) # Validación cruzada
-d2=density(y, bw = hpi) # Plug-in
+d1_y=density(y, bw = hvc_y) # Validación cruzada
+d2_y=density(y, bw = hpi_y) # Plug-in
+```
 
+Representamos los estimadores sobre el histograma de frecuencia de la variable y. 
+```{r}
 hist(y,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='') 
-lines(d1, col='red', lwd= 2 )
-lines(d2, col = 'blue',lwd= 2)
+lines(d1_y, col='blue', lwd= 2 )
+lines(d2_y, col = 'red',lwd= 2)
 legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
-```
-
-```{r}
-
-```
-
-```{r}
-
 ```
 
 ::: callout-note
@@ -91,35 +77,41 @@ legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 Repite los dos apartados anteriores para x1 y x2.
 :::
 
+**x1**
 ```{r}
-hvc=bw.ucv(x1) #  Validación cruzada
-hvc
-hpi=bw.SJ(x1)  #  Plug-in
-hpi
-
-hvc=bw.ucv(x2) #  Validación cruzada
-hvc
-hpi=bw.SJ(x2)  #  Plug-in
-hpi
+#x1
+hvc_x1=bw.ucv(x1) #  Validación cruzada
+hvc_x1
+hpi_x1=bw.SJ(x1)  #  Plug-in
+hpi_x1
 ```
 
 ```{r}
-d1=density(x1, bw = hvc) # Validación cruzada
-d2=density(x1, bw = hpi) # Plug-in
+d1_x1=density(x1, bw = hvc_x1) # Validación cruzada
+d2_x1=density(x1, bw = hpi_x1) # Plug-in
 
 hist(x1,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='') 
-lines(d1, col='red', lwd= 2 )
-lines(d2, col = 'blue',lwd= 2)
+lines(d1_x1, col='blue', lwd= 2 )
+lines(d2_x1, col = 'red',lwd= 2)
 legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
+**x2**
 ```{r}
-d1=density(x2, bw = hvc) # Validación cruzada
-d2=density(x2, bw = hpi) # Plug-in
+#x2
+hvc_x2=bw.ucv(x2) #  Validación cruzada
+hvc_x2
+hpi_x2=bw.SJ(x2)  #  Plug-in
+hpi_x2
+```
+
+```{r}
+d1_x2=density(x2, bw = hvc_x2) # Validación cruzada
+d2_x2=density(x2, bw = hpi_x2) # Plug-in
 
 hist(x2,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='', ylim=c(0,0.0008)) 
-lines(d1, col='red', lwd= 2 )
-lines(d2, col = 'blue',lwd= 2)
+lines(d1_x2, col='blue', lwd= 2 )
+lines(d2_x2, col = 'red',lwd= 2)
 legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
@@ -132,18 +124,44 @@ matrix(y_masc,x1)
 # Tarea 2
 ::: callout-note
 ## Ejercicio 4
-Estima la función de densidad conjunta de (y, x1) utilizando un estimador núcleo, con núcleo gaussiano y ventana calculada con método plug-in. Escribe la matriz de ventadas y representa el estimador obtenido.
+Estima la función de densidad conjunta de (y, x1) utilizando un estimador núcleo, con núcleo gaussiano y ventana calculada con método plug-in. Escribe la matriz de ventanas y representa el estimador obtenido.
 :::
-ks usa el nucleo gaussiano 
+
+¡Ojo!: Antes quitamos en x1 los elementos `NA`. Por tanto, debemos quitarle a y los correspondientes.
+
+```{r}
+y_masc = y[masc]
+length(x1)
+length(y_masc)
+```
+
+Para la función de densidad conjunta usaremos la librería `ks`, tiene establecido el núcleo gaussiano por defecto. 
+
 ```{r}
 library(ks)
-mat = cbind(y_masc,x1)
-Hp = Hpi(mat)
+```
+
+Calculamos la matriz de ventanas.
+
+```{r}
+mat = cbind(x1,y_masc)
+Hp = Hpi(mat) 
 print(Hp)
-fhat.pi = kde(mat,H=Hp) # Por defecto el método es plug in
- 
-plot(fhat.pi) # Representación de los contornos
-plot(y_masc,x1)
+```
+
+Expresamos la función de densidad conjunta usando `kde`, si no se especifica la matriz de ventanas usa el método plug-in, aun así se lo indicamos. Representamos los contornos.
+
+```{r}
+fhat.pi = kde(mat,H=Hp) 
+
+v= 1:9*10
+plot(fhat.pi, cont=v, lwd=3) # añadimos contornos
+```
+
+Comparamos con la distribución.
+
+```{r}
+points(x1,y_masc, pch=20, cex=0.5)
 ```
 
 ```{r}
@@ -154,15 +172,11 @@ z1 = fhat.pi$eval.points[[1]]
 z2 = fhat.pi$eval.points[[2]]
 
 z3 = fhat.pi$estimate
- 
+
+layout(matrix(1:2, ncol=2))
 persp(z1,z2,z3,col='gold')
-
-persp(z1,z2,z3,col='gold',theta=45,phi=45) # Mismo grafico pero rotado
- 
-```
-
-```{r}
-
+persp(z1,z2,z3,col='gold',theta=45,phi=45) # Mismo gráfico pero rotado
+layout(1) #para que vuelva a verse una gráfica
 ```
 
 ::: callout-note
@@ -174,31 +188,22 @@ Da una estimación de la función de densidad conjunta en (y, x1) = (20, 150).
 predict(fhat.pi,x=c(20,150))
 ```
 
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
 ::: callout-note
 ## Ejercicio 6
 Repite los dos apartados anteriores para (y, x2) y (y, x2) = (25, 3000). 
 :::
+
+Nota: en este caso usamos la variable y original.
+
 ```{r}
-library(ks)
-mat = cbind(y, x2)
+mat = cbind(x2, y)
 Hp = Hpi(mat)
 print(Hp)
-fhat.pi = kde(mat,H=Hp) # Por defecto el método es plug in
+fhat.pi = kde(mat,H=Hp)
  
-plot(fhat.pi) # Representación de los contornos
-points(y,x2,cex=0.1)
+v= 1:9*10
+plot(fhat.pi, cont=v, lwd=3)
+points(x2, y,pch=20, cex=0.5)
 ```
 
 ```{r}
@@ -209,30 +214,15 @@ z1 = fhat.pi$eval.points[[1]]
 z2 = fhat.pi$eval.points[[2]]
 
 z3 = fhat.pi$estimate
- 
-persp(z1,z2,z3,col='gold')
 
+layout(matrix(1:2, ncol=2))
+persp(z1,z2,z3,col='gold')
 persp(z1,z2,z3,col='gold',theta=45,phi=45) # Mismo grafico pero rotado
- 
+layout(1)
 ```
+
 ```{r}
 predict(fhat.pi,x=c(25,3000))
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
 ```
 
 # Tarea 3
@@ -242,20 +232,28 @@ predict(fhat.pi,x=c(25,3000))
 Estima la curva de regresión de y sobre x1 utilizando un estimador local lineal (p = 1), con núcleo gaussiano, y ventana calculada con los métodos: validación cruzada y plug-in.
 :::
 
-```{r}
+El paquete `KernSmooth` toma por defecto el núcleo gaussiano y la ventana obtenida por el método 'plug-in'.
 
+```{r}
+library(KernSmooth)
+h_pi = dpill(x1,y_masc)
+h_pi #ventana plug-in
+
+m_pi = locpoly(x1, y_masc,bandwidth=h_pi)
+plot(x1, y_masc)
+lines(m_pi, col='brown', lwd=3)
 ```
 
-```{r}
-
-```
+El paquete `np` toma por defecto el núcleo gaussiano y la ventana obtenida por el criterio de validación cruzada.
 
 ```{r}
+library(np)
+bw_vc = npregbw(y_masc~x1, regtype="ll") #hay que indicar el grado
+h_vc = bw_vc$bw #ventana validación cruzada
 
-```
+m_vc = locpoly(x1,y_masc, bandwidth = h_vc)
 
-```{r}
-
+lines(m_vc, col="darkgreen", lwd=2)
 ```
 
 ::: callout-note
@@ -264,57 +262,40 @@ Calcula la línea de regresión y escribe su expresión.
 :::
 
 ```{r}
-
+lr = lm(y_masc~x1)
+lr
+abline(lr, col="steelblue", lwd=2)
 ```
 
-```{r}
+Su expresión sería:
 
-```
+$y_{masc} = 39.9359 - 0.1578 x_1 $
 
-```{r}
-
-```
-
-```{r}
-
-```
 
 ::: callout-note
 ## Ejercicio 9
 Representa los tres estimadores en un mismo gráfico. Comenta brevemente el resultado.
 :::
 
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
 
 ::: callout-note
 ## Ejercicio 10
 Estima la curva de regresión en x1 = 110 con los tres estimadores.
 :::
 
+Recta de regresión
 ```{r}
-
+predict(lr, newdata = data.frame(x1 = 110))
 ```
 
+Estimador local lineal con validación cruzada
 ```{r}
-
+approx(m_pi$x, m_pi$y, xout = 110)$y
 ```
 
+Estimador local lineal con plug-in
 ```{r}
-
+approx(m_vc$x, m_vc$y, xout = 110)$y
 ```
 
 ::: callout-note
@@ -323,26 +304,49 @@ Repite los cuatro apartados anteriores para y sobre x2 y x2 = 3000.
 :::
 
 ```{r}
+h_pi = dpill(x2,y)
+h_pi #ventana plug-in
 
+m_pi = locpoly(x2, y,bandwidth=h_pi)
+plot(x2, y)
+lines(m_pi, col='brown', lwd=3)
 ```
 
 ```{r}
+bw_vc = npregbw(y~x2, regtype="ll") #hay que indicar el grado
+h_vc = bw_vc$bw #ventana validación cruzada
 
+m_vc = locpoly(x2,y, bandwidth = h_vc)
+
+lines(m_vc, col="darkgreen", lwd=2)
 ```
 
 ```{r}
-
+lr = lm(y~x2)
+lr
+abline(lr, col="steelblue", lwd=2)
 ```
 
-```{r}
+Su expresión sería:
 
+$y_{masc} = 46.317364 - 0.007677 x_2 $
+
+
+t----------------------------------------------
+Comentar 
+t-----------------------------------------
+
+Recta de regresión
+```{r}
+predict(lr, newdata = data.frame(x2 = 3000))
 ```
 
-
+Estimador local lineal con validación cruzada
 ```{r}
-
+approx(m_pi$x, m_pi$y, xout = 3000)$y
 ```
 
+Estimador local lineal con plug-in
 ```{r}
-
+approx(m_vc$x, m_vc$y, xout = 3000)$y
 ```
