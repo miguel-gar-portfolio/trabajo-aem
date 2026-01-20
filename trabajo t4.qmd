@@ -14,10 +14,10 @@ format:
 editor: source
 ---
 
-
 # Variables
 
 Preparamos la tabla cambiándole el nombre a las columnas por comodidad.
+
 ```{r}
 data <- read.table("auto-mpg.data")
 colnames(data) <- c("mpg","cylinders","displacement","horsepower",
@@ -37,15 +37,18 @@ x1<- x1[masc]
 x2 <- data$weight
 ```
 
-Una vez preparadas las variables podemos pasar a realizar los ejercicios. 
+Una vez preparadas las variables podemos pasar a realizar los ejercicios.
 
 # Tarea 1
+
 ::: callout-note
 ## Ejercicio 1
+
 Determina el parámetro ventana para la estimación de la función de densidad de y, utilizando núcleo gaussiano, con los métodos: validación cruzada y plug-in.
 :::
 
-Para determinar el valor de las ventanas usaremos las funciones siguientes, las cuales usan el núcleo gaussiano por defecto. 
+Para determinar el valor de las ventanas usaremos las funciones siguientes, las cuales usan el núcleo gaussiano por defecto.
+
 ```{r}
 hvc_y=bw.ucv(y) #  Validación cruzada
 hvc_y
@@ -55,16 +58,19 @@ hpi_y
 
 ::: callout-note
 ## Ejercicio 2
+
 Representa los estimadores núcleo asociados en un mismo gráfico. Comenta brevemente el resultado.
 :::
 
-Definimos los distintos estimadores determinando las ventanas que deben ser usadas. 
+Definimos los distintos estimadores determinando las ventanas que deben ser usadas.
+
 ```{r}
 d1_y=density(y, bw = hvc_y) # Validación cruzada
 d2_y=density(y, bw = hpi_y) # Plug-in
 ```
 
-Representamos los estimadores sobre el histograma de frecuencia de la variable y. 
+Representamos los estimadores sobre el histograma de frecuencia de la variable y.
+
 ```{r}
 hist(y,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='') 
 lines(d1_y, col='blue', lwd= 2 )
@@ -74,10 +80,12 @@ legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 
 ::: callout-note
 ## Ejercicio 3
+
 Repite los dos apartados anteriores para x1 y x2.
 :::
 
 **x1**
+
 ```{r}
 #x1
 hvc_x1=bw.ucv(x1) #  Validación cruzada
@@ -97,6 +105,7 @@ legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
 **x2**
+
 ```{r}
 #x2
 hvc_x2=bw.ucv(x2) #  Validación cruzada
@@ -115,15 +124,11 @@ lines(d2_x2, col = 'red',lwd= 2)
 legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
-```{r}
-length(x1)
-length(y_masc)
-matrix(y_masc,x1)
-```
-
 # Tarea 2
+
 ::: callout-note
 ## Ejercicio 4
+
 Estima la función de densidad conjunta de (y, x1) utilizando un estimador núcleo, con núcleo gaussiano y ventana calculada con método plug-in. Escribe la matriz de ventanas y representa el estimador obtenido.
 :::
 
@@ -135,7 +140,7 @@ length(x1)
 length(y_masc)
 ```
 
-Para la función de densidad conjunta usaremos la librería `ks`, tiene establecido el núcleo gaussiano por defecto. 
+Para la función de densidad conjunta usaremos la librería `ks`.
 
 ```{r}
 library(ks)
@@ -146,22 +151,22 @@ Calculamos la matriz de ventanas.
 ```{r}
 mat = cbind(x1,y_masc)
 Hp = Hpi(mat) 
-print(Hp)
+Hp
 ```
 
-Expresamos la función de densidad conjunta usando `kde`, si no se especifica la matriz de ventanas usa el método plug-in, aun así se lo indicamos. Representamos los contornos.
+Expresamos la función de densidad conjunta usando `kde`, si no se especifica la matriz de ventanas ni el núcleo usa el método plug-in y el núcleo gaussiano por defecto. Representamos los contornos.
 
 ```{r}
 fhat.pi = kde(mat,H=Hp) 
 
 v= 1:9*10
-plot(fhat.pi, cont=v, lwd=3) # añadimos contornos
+plot(fhat.pi, cont=v, lwd=3,ylim=c(0,55),xlim=c(0,250)) # añadimos contornos
 ```
 
 Comparamos con la distribución.
 
 ```{r}
-points(x1,y_masc, pch=20, cex=0.5)
+plot(x1,y_masc, pch=8, cex=1.5,ylim=c(0,55),xlim=c(0,250))
 ```
 
 ```{r}
@@ -181,16 +186,18 @@ layout(1) #para que vuelva a verse una gráfica
 
 ::: callout-note
 ## Ejercicio 5
+
 Da una estimación de la función de densidad conjunta en (y, x1) = (20, 150).
 :::
 
 ```{r}
-predict(fhat.pi,x=c(20,150))
+predict(fhat.pi,x=c(150,20))
 ```
 
 ::: callout-note
 ## Ejercicio 6
-Repite los dos apartados anteriores para (y, x2) y (y, x2) = (25, 3000). 
+
+Repite los dos apartados anteriores para (y, x2) y (y, x2) = (25, 3000).
 :::
 
 Nota: en este caso usamos la variable y original.
@@ -203,7 +210,7 @@ fhat.pi = kde(mat,H=Hp)
  
 v= 1:9*10
 plot(fhat.pi, cont=v, lwd=3)
-points(x2, y,pch=20, cex=0.5)
+points(x2, y,pch=8, cex=0.3)
 ```
 
 ```{r}
@@ -222,13 +229,14 @@ layout(1)
 ```
 
 ```{r}
-predict(fhat.pi,x=c(25,3000))
+predict(fhat.pi,x=c(3000,25))
 ```
 
 # Tarea 3
 
 ::: callout-note
 ## Ejercicio 7
+
 Estima la curva de regresión de y sobre x1 utilizando un estimador local lineal (p = 1), con núcleo gaussiano, y ventana calculada con los métodos: validación cruzada y plug-in.
 :::
 
@@ -240,6 +248,7 @@ h_pi = dpill(x1,y_masc)
 h_pi #ventana plug-in
 
 m_pi = locpoly(x1, y_masc,bandwidth=h_pi)
+
 plot(x1, y_masc)
 lines(m_pi, col='brown', lwd=3)
 ```
@@ -253,53 +262,64 @@ h_vc = bw_vc$bw #ventana validación cruzada
 
 m_vc = locpoly(x1,y_masc, bandwidth = h_vc)
 
-lines(m_vc, col="darkgreen", lwd=2)
+plot(x1, y_masc)
+lines(m_vc, col="darkgreen", lwd=2,type="l")
 ```
 
 ::: callout-note
 ## Ejercicio 8
+
 Calcula la línea de regresión y escribe su expresión.
 :::
 
 ```{r}
 lr = lm(y_masc~x1)
 lr
+
+plot(x1,y_masc)
 abline(lr, col="steelblue", lwd=2)
 ```
 
 Su expresión sería:
 
-$y_{masc} = 39.9359 - 0.1578 x_1 $
-
+\$y\_{masc} = 39.9359 - 0.1578 x_1 \$
 
 ::: callout-note
 ## Ejercicio 9
+
 Representa los tres estimadores en un mismo gráfico. Comenta brevemente el resultado.
 :::
 
+```{r}
+plot(x1,y_masc,pch=20,cex=0.8)
+lines(m_pi,col="red",lwd=2)
+lines(m_vc,col="blue",lwd=2)
+abline(lr,col="black",lwd=2)
+legend("topright", legend = c("CV", "Plug-in","RL"), col = c("blue","red","black"),
+       lwd = 2)
+```
 
 ::: callout-note
 ## Ejercicio 10
+
 Estima la curva de regresión en x1 = 110 con los tres estimadores.
 :::
 
-Recta de regresión
 ```{r}
-predict(lr, newdata = data.frame(x1 = 110))
-```
+pred_pi <- approx(x = m_pi$x,y = m_pi$y,
+                       xout = 110)$y
+pred_cv <- approx(x = m_vc$x,y = m_vc$y,
+                       xout = 110)$y
+pred_reg <- predict(lr,newdata=data.frame(x1=110))
 
-Estimador local lineal con validación cruzada
-```{r}
-approx(m_pi$x, m_pi$y, xout = 110)$y
-```
-
-Estimador local lineal con plug-in
-```{r}
-approx(m_vc$x, m_vc$y, xout = 110)$y
+predicciones <- c(pred_pi,pred_cv,pred_reg)
+names(predicciones) <- c("Plug in","CrossValidation","RL")
+predicciones
 ```
 
 ::: callout-note
 ## Ejercicio 11
+
 Repite los cuatro apartados anteriores para y sobre x2 y x2 = 3000.
 :::
 
@@ -308,8 +328,9 @@ h_pi = dpill(x2,y)
 h_pi #ventana plug-in
 
 m_pi = locpoly(x2, y,bandwidth=h_pi)
+
 plot(x2, y)
-lines(m_pi, col='brown', lwd=3)
+lines(m_pi, col='red', lwd=3)
 ```
 
 ```{r}
@@ -318,35 +339,39 @@ h_vc = bw_vc$bw #ventana validación cruzada
 
 m_vc = locpoly(x2,y, bandwidth = h_vc)
 
-lines(m_vc, col="darkgreen", lwd=2)
+plot(x2, y)
+lines(m_vc, col="blue", lwd=2)
 ```
 
 ```{r}
 lr = lm(y~x2)
 lr
-abline(lr, col="steelblue", lwd=2)
-```
 
+plot(x2, y)
+abline(lr, col="black", lwd=2)
+```
 Su expresión sería:
 
-$y_{masc} = 46.317364 - 0.007677 x_2 $
+\$y\_{masc} = 46.317364 - 0.007677 x_2 \$
 
-
-t----------------------------------------------
-**COMENTAR**
-t-----------------------------------------
-
-Recta de regresión
 ```{r}
-predict(lr, newdata = data.frame(x2 = 3000))
+plot(x2,y)
+lines(m_pi,col='blue',lwd=2)
+lines(m_vc,col='red',lwd=2)
+abline(lr,col='black',lwd=2)
+legend("topright", legend = c("CV", "Plug-in","RL"), col = c("red","blue","black"),
+       lwd = 2)
 ```
 
-Estimador local lineal con validación cruzada
 ```{r}
-approx(m_pi$x, m_pi$y, xout = 3000)$y
+pred_pi <- approx(x = m_pi$x,y = m_pi$y,
+                       xout = 3000)$y
+pred_cv <- approx(x = m_vc$x,y = m_vc$y,
+                       xout = 3000)$y
+pred_reg <- predict(lr,newdata=data.frame(x2=3000))
+
+predicciones <- c(pred_pi,pred_cv,pred_reg)
+names(predicciones) <- c("Plug in","CrossValidation","RL")
+predicciones
 ```
 
-Estimador local lineal con plug-in
-```{r}
-approx(m_vc$x, m_vc$y, xout = 3000)$y
-```
