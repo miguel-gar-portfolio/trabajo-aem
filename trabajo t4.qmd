@@ -1,6 +1,6 @@
 ---
 title: "Trabajo Regresión funciones núcleo"
-author: "alguien <br/> alguine 2 <br/> Lola Velasco Ballesta"
+author: "Miguel García Moreno <br/> Hugo Montilla Anta <br/> Lola Velasco Ballesta"
 date: today
 lang: es
 
@@ -349,4 +349,5 @@ approx(m_pi$x, m_pi$y, xout = 3000)$y
 Estimador local lineal con plug-in
 ```{r}
 approx(m_vc$x, m_vc$y, xout = 3000)$y
+
 ```
