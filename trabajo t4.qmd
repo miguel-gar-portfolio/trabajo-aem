@@ -372,6 +372,7 @@ pred_reg <- predict(lr,newdata=data.frame(x2=3000))
 
 predicciones <- c(pred_pi,pred_cv,pred_reg)
 names(predicciones) <- c("Plug in","CrossValidation","RL")
+
 predicciones
 ```
 
