@@ -1,6 +1,6 @@
 ---
 title: "Trabajo Regresión funciones núcleo"
-author: "alguien <br/> alguine 2 <br/> Lola Velasco Ballesta"
+author: "Miguel García Moreno <br/> Hugo Montilla Anta <br/> Lola Velasco Ballesta"
 date: today
 lang: es
 
@@ -330,7 +330,7 @@ h_pi #ventana plug-in
 m_pi = locpoly(x2, y,bandwidth=h_pi)
 
 plot(x2, y)
-lines(m_pi, col='red', lwd=3)
+lines(m_pi, col='red', lwd=2)
 ```
 
 ```{r}
@@ -375,4 +375,5 @@ names(predicciones) <- c("Plug in","CrossValidation","RL")
 
 predicciones
 ```
+
 
