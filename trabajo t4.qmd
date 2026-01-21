@@ -78,6 +78,8 @@ lines(d2_y, col = 'red',lwd= 2)
 legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
+Vemos que los dos tipos de estimaciones dan resultados muy parecidos. Comparandolo con el histograma de frecuencias real, comprobamos que parece ser un buen ajuste. 
+
 ::: callout-note
 ## Ejercicio 3
 
@@ -98,11 +100,13 @@ hpi_x1
 d1_x1=density(x1, bw = hvc_x1) # Validación cruzada
 d2_x1=density(x1, bw = hpi_x1) # Plug-in
 
-hist(x1,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='') 
+hist(x1,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='', ylim=c(0,0.03)) 
 lines(d1_x1, col='blue', lwd= 2 )
 lines(d2_x1, col = 'red',lwd= 2)
 legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
+
+En este otro observamos diferencias entre las aproximaciones. La estimacion del LSCV es mas rugosa, tiene más pliegues, y en cambio la del plug in es muy suave. Esto se debe a que la venta del plug in es notablemente mayor que la del LCSV. Es distinto al ejemplo anterior, porque en el anterior ejercico las ventanas eran muy parecidas. 
 
 **x2**
 
@@ -123,6 +127,8 @@ lines(d1_x2, col='blue', lwd= 2 )
 lines(d2_x2, col = 'red',lwd= 2)
 legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
+
+En este gráfico observamos un comportamiento muy parecido al del primer apartado. 
 
 # Tarea 2
 
@@ -168,6 +174,8 @@ Comparamos con la distribución.
 ```{r}
 plot(x1,y_masc, pch=8, cex=1.5,ylim=c(0,55),xlim=c(0,250))
 ```
+
+Comprobamos que se asemejan mucho. Parece una buena estimación. 
 
 ```{r}
 # Representación en 3D
@@ -228,6 +236,8 @@ persp(z1,z2,z3,col='gold',theta=45,phi=45) # Mismo grafico pero rotado
 layout(1)
 ```
 
+Hacemos la predicción de la densidad conjunta dado los valores del enunciado.
+
 ```{r}
 predict(fhat.pi,x=c(3000,25))
 ```
@@ -266,6 +276,8 @@ plot(x1, y_masc)
 lines(m_vc, col="darkgreen", lwd=2,type="l")
 ```
 
+Viendo las gráficas podemos ver que el primer método (plug in) tiene una ventana más grande, dibujando una función de densidad estimada más suave que la del segundo método (validación cruzada) que vuelve a tener una ventana más pequeña.
+
 ::: callout-note
 ## Ejercicio 8
 
@@ -282,7 +294,7 @@ abline(lr, col="steelblue", lwd=2)
 
 Su expresión sería:
 
-\$y\_{masc} = 39.9359 - 0.1578 x_1 \$
+$y\_{masc} = 39.9359 - 0.1578 x_1$
 
 ::: callout-note
 ## Ejercicio 9
@@ -298,6 +310,8 @@ abline(lr,col="black",lwd=2)
 legend("topright", legend = c("CV", "Plug-in","RL"), col = c("blue","red","black"),
        lwd = 2)
 ```
+
+Plug in es una estimacion más suave de nuevo que la estimacion CV. En este probablemente sería una idea usar el método plug in porque parece adaptarse mejor a la varianza de los datos. 
 
 ::: callout-note
 ## Ejercicio 10
@@ -352,7 +366,7 @@ abline(lr, col="black", lwd=2)
 ```
 Su expresión sería:
 
-\$y\_{masc} = 46.317364 - 0.007677 x_2 \$
+$y_{masc} = 46.317364 - 0.007677 x_2$
 
 ```{r}
 plot(x2,y)
@@ -362,6 +376,8 @@ abline(lr,col='black',lwd=2)
 legend("topright", legend = c("CV", "Plug-in","RL"), col = c("red","blue","black"),
        lwd = 2)
 ```
+
+En este caso vemos que CV y plug in han encontrado una ventana similar, concluyendo en estimaciones muy parecidas. 
 
 ```{r}
 pred_pi <- approx(x = m_pi$x,y = m_pi$y,
