@@ -1,5 +1,5 @@
 ---
-title: "Trabajo Regresión funciones núcleo"
+title: "Trabajo Regresión con funciones núcleo"
 author: "Miguel García Moreno <br/> Hugo Montilla Anta <br/> Lola Velasco Ballesta"
 date: today
 lang: es
@@ -10,7 +10,7 @@ format:
   typst: 
     toc: true
     papersize: a4
-    output-file: "blabla.pdf"
+    output-file: "GarcíaMontillaVelasco.pdf"
 editor: source
 ---
 
