@@ -29,12 +29,11 @@ Definimos las variables como nos piden. ¡Ojo!: x1 tiene valores `NA`, se crea u
 
 ```{r}
 y <- data$mpg
-
 x1 <- as.numeric(data$horsepower)
-masc=!is.na(x1)
-x1<- x1[masc]  
-
 x2 <- data$weight
+
+masc=is.na(x1)
+x1<- x1[!masc]  
 ```
 
 Una vez preparadas las variables podemos pasar a realizar los ejercicios.
@@ -72,10 +71,10 @@ d2_y=density(y, bw = hpi_y) # Plug-in
 Representamos los estimadores sobre el histograma de frecuencia de la variable y.
 
 ```{r}
-hist(y,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='') 
+hist(y,freq=FALSE,main='Estimadores de la función de densidad', xlab='') 
 lines(d1_y, col='blue', lwd= 2 )
 lines(d2_y, col = 'red',lwd= 2)
-legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
+legend("topright", legend = c("CV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
 Vemos que los dos tipos de estimaciones dan resultados muy parecidos. Comparandolo con el histograma de frecuencias real, comprobamos que parece ser un buen ajuste. 
@@ -100,10 +99,10 @@ hpi_x1
 d1_x1=density(x1, bw = hvc_x1) # Validación cruzada
 d2_x1=density(x1, bw = hpi_x1) # Plug-in
 
-hist(x1,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='', ylim=c(0,0.03)) 
+hist(x1,freq=FALSE,main='Estimadores de la función de densidad', xlab='', ylim=c(0,0.03)) 
 lines(d1_x1, col='blue', lwd= 2 )
 lines(d2_x1, col = 'red',lwd= 2)
-legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
+legend("topright", legend = c("CV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
 En este otro observamos diferencias entre las aproximaciones. La estimacion del LSCV es mas rugosa, tiene más pliegues, y en cambio la del plug in es muy suave. Esto se debe a que la venta del plug in es notablemente mayor que la del LCSV. Es distinto al ejemplo anterior, porque en el anterior ejercico las ventanas eran muy parecidas. 
@@ -122,10 +121,10 @@ hpi_x2
 d1_x2=density(x2, bw = hvc_x2) # Validación cruzada
 d2_x2=density(x2, bw = hpi_x2) # Plug-in
 
-hist(x2,freq=FALSE, border="green",main='Estimadores de la función de densidad', xlab='', ylim=c(0,0.0008)) 
+hist(x2,freq=FALSE,main='Estimadores de la función de densidad', xlab='', ylim=c(0,0.0008)) 
 lines(d1_x2, col='blue', lwd= 2 )
 lines(d2_x2, col = 'red',lwd= 2)
-legend("topright", legend = c("LSCV", "Plug-in"), col = c("blue","red"),lwd = 2)
+legend("topright", legend = c("CV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
 En este gráfico observamos un comportamiento muy parecido al del primer apartado. 
@@ -141,7 +140,8 @@ Estima la función de densidad conjunta de (y, x1) utilizando un estimador núcl
 ¡Ojo!: Antes quitamos en x1 los elementos `NA`. Por tanto, debemos quitarle a y los correspondientes.
 
 ```{r}
-y_masc = y[masc]
+y_masc = y[!masc]
+
 length(x1)
 length(y_masc)
 ```
@@ -212,8 +212,11 @@ Nota: en este caso usamos la variable y original.
 
 ```{r}
 mat = cbind(x2, y)
+
+# Ventana
 Hp = Hpi(mat)
-print(Hp)
+Hp
+
 fhat.pi = kde(mat,H=Hp)
  
 v= 1:9*10
@@ -250,30 +253,32 @@ predict(fhat.pi,x=c(3000,25))
 Estima la curva de regresión de y sobre x1 utilizando un estimador local lineal (p = 1), con núcleo gaussiano, y ventana calculada con los métodos: validación cruzada y plug-in.
 :::
 
-El paquete `KernSmooth` toma por defecto el núcleo gaussiano y la ventana obtenida por el método 'plug-in'.
+Usamos locpoly del paquete `KernSmooth`, que toma por defecto el núcleo gaussiano y la ventana obtenida por el método 'plug-in'.
 
 ```{r}
 library(KernSmooth)
+
 h_pi = dpill(x1,y_masc)
 h_pi #ventana plug-in
 
 m_pi = locpoly(x1, y_masc,bandwidth=h_pi)
 
 plot(x1, y_masc)
-lines(m_pi, col='brown', lwd=3)
+lines(m_pi, col='red', lwd=2)
 ```
 
-El paquete `np` toma por defecto el núcleo gaussiano y la ventana obtenida por el criterio de validación cruzada.
+Usamos npregbw del paquete `np` para calcular la ventana mediante validación cruzada. 
 
 ```{r}
 library(np)
+
 bw_vc = npregbw(y_masc~x1, regtype="ll") #hay que indicar el grado
 h_vc = bw_vc$bw #ventana validación cruzada
 
 m_vc = locpoly(x1,y_masc, bandwidth = h_vc)
 
 plot(x1, y_masc)
-lines(m_vc, col="darkgreen", lwd=2,type="l")
+lines(m_vc, col="blue", lwd=2,type="l")
 ```
 
 Viendo las gráficas podemos ver que el primer método (plug in) tiene una ventana más grande, dibujando una función de densidad estimada más suave que la del segundo método (validación cruzada) que vuelve a tener una ventana más pequeña.
@@ -289,7 +294,7 @@ lr = lm(y_masc~x1)
 lr
 
 plot(x1,y_masc)
-abline(lr, col="steelblue", lwd=2)
+abline(lr, col="black", lwd=2)
 ```
 
 Su expresión sería:
@@ -318,6 +323,8 @@ Plug in es una estimacion más suave de nuevo que la estimacion CV. En este prob
 
 Estima la curva de regresión en x1 = 110 con los tres estimadores.
 :::
+
+La función locpoly no tiene la función predict por lo que tenemos que usar approx.
 
 ```{r}
 pred_pi <- approx(x = m_pi$x,y = m_pi$y,
