@@ -105,7 +105,7 @@ lines(d2_x1, col = 'red',lwd= 2)
 legend("topright", legend = c("CV", "Plug-in"), col = c("blue","red"),lwd = 2)
 ```
 
-En este otro observamos diferencias entre las aproximaciones. La estimacion del LSCV es mas rugosa, tiene más pliegues, y en cambio la del plug in es muy suave. Esto se debe a que la venta del plug in es notablemente mayor que la del LCSV. Es distinto al ejemplo anterior, porque en el anterior ejercico las ventanas eran muy parecidas. 
+En este otro observamos diferencias entre las aproximaciones. La estimacion del LSCV es mas rugosa, tiene más pliegues, y en cambio la del plug in es muy suave. Esto se debe a que la ventana del plug in es notablemente mayor que la del LCSV. Es distinto al ejemplo anterior, porque en el anterior ejercicio las ventanas eran muy parecidas. 
 
 **x2**
 
@@ -148,7 +148,7 @@ length(y_masc)
 
 Para la función de densidad conjunta usaremos la librería `ks`.
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 library(ks)
 ```
 
@@ -255,9 +255,11 @@ Estima la curva de regresión de y sobre x1 utilizando un estimador local lineal
 
 Usamos locpoly del paquete `KernSmooth`, que toma por defecto el núcleo gaussiano y la ventana obtenida por el método 'plug-in'.
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 library(KernSmooth)
+```
 
+```{r}
 h_pi = dpill(x1,y_masc)
 h_pi #ventana plug-in
 
@@ -269,9 +271,11 @@ lines(m_pi, col='red', lwd=2)
 
 Usamos npregbw del paquete `np` para calcular la ventana mediante validación cruzada. 
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 library(np)
+```
 
+```{r}
 bw_vc = npregbw(y_masc~x1, regtype="ll") #hay que indicar el grado
 h_vc = bw_vc$bw #ventana validación cruzada
 
@@ -294,7 +298,7 @@ lr = lm(y_masc~x1)
 lr
 
 plot(x1,y_masc)
-abline(lr, col="black", lwd=2)
+abline(lr, col="darkgreen", lwd=2)
 ```
 
 Su expresión sería:
@@ -309,14 +313,14 @@ Representa los tres estimadores en un mismo gráfico. Comenta brevemente el resu
 
 ```{r}
 plot(x1,y_masc,pch=20,cex=0.8)
-lines(m_pi,col="red",lwd=2)
 lines(m_vc,col="blue",lwd=2)
-abline(lr,col="black",lwd=2)
-legend("topright", legend = c("CV", "Plug-in","RL"), col = c("blue","red","black"),
+lines(m_pi,col="red",lwd=2)
+abline(lr,col="darkgreen",lwd=2)
+legend("topright", legend = c("CV", "Plug-in","RL"), col = c("blue","red","darkgreen"),
        lwd = 2)
 ```
 
-Plug in es una estimacion más suave de nuevo que la estimacion CV. En este probablemente sería una idea usar el método plug in porque parece adaptarse mejor a la varianza de los datos. 
+Plug in es una estimación más suave de nuevo que la estimación CV. En este probablemente sería buena idea usar el método plug in porque parece adaptarse mejor a la varianza de los datos. 
 
 ::: callout-note
 ## Ejercicio 10
@@ -369,7 +373,7 @@ lr = lm(y~x2)
 lr
 
 plot(x2, y)
-abline(lr, col="black", lwd=2)
+abline(lr, col="darkgreen", lwd=2)
 ```
 Su expresión sería:
 
@@ -379,8 +383,8 @@ $y_{masc} = 46.317364 - 0.007677 x_2$
 plot(x2,y)
 lines(m_pi,col='blue',lwd=2)
 lines(m_vc,col='red',lwd=2)
-abline(lr,col='black',lwd=2)
-legend("topright", legend = c("CV", "Plug-in","RL"), col = c("red","blue","black"),
+abline(lr,col='darkgreen',lwd=2)
+legend("topright", legend = c("CV", "Plug-in","RL"), col = c("red","blue","darkgreen"),
        lwd = 2)
 ```
 
